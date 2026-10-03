@@ -6,21 +6,49 @@ A terminal adaptation of [Things for Obsidian](https://github.com/colineckert/ob
 
 ## Install
 
+These native steps follow [Ghostty's theme documentation](https://ghostty.org/docs/config/reference#theme). The commands below are for macOS and Linux. Back up any existing `Things Light` and `Things Dark` files in the destination before copying.
+
+```sh
+git clone https://github.com/sergpryimachuk/things-ghostty.git
+cd things-ghostty
+theme_dir="${XDG_CONFIG_HOME:-$HOME/.config}/ghostty/themes"
+mkdir -p "$theme_dir"
+cp "themes/Things Light" "themes/Things Dark" "$theme_dir/"
+```
+
+Open your Ghostty configuration through its settings command. Back up the file before editing, then replace its existing `theme` setting with:
+
+```ini
+theme = light:Things Light,dark:Things Dark
+```
+
+Ghostty uses `config.ghostty` for new configurations and also loads legacy `config` files. It searches the XDG location on macOS and Linux, plus `~/Library/Application Support/com.mitchellh.ghostty` on macOS. If several files exist, later files override earlier ones. Keep using your existing configuration; there is no need to rename it. See [configuration locations and load order](https://ghostty.org/docs/config#file-location).
+
+Reload with **Cmd+Shift+comma** on macOS or **Ctrl+Shift+comma** on Linux. Confirm the themes are discoverable with `ghostty +list-themes`. If Ghostty is not in your macOS PATH, use `/Applications/Ghostty.app/Contents/MacOS/ghostty`.
+
+### Optional installer
+
+This repository provides a Python 3.9+ convenience script. It automates the native steps and is not provided by Ghostty.
+
 ```sh
 python3 install.py
 ```
 
-The installer copies both themes to Ghostty's user configuration folder and selects the system appearance. On macOS it uses `~/Library/Application Support/com.mitchellh.ghostty/themes` with absolute theme paths, so a root-owned `~/.config/ghostty/themes` is harmless. On Linux it uses `$XDG_CONFIG_HOME/ghostty` or `~/.config/ghostty`.
+The installer updates the last existing configuration in Ghostty's documented load order. When no configuration exists, it creates `config.ghostty` in the macOS Application Support directory or the Linux XDG directory. It preserves other preferences, validates the themes and candidate configuration with Ghostty, and makes timestamped backups before changes. To select a custom configuration explicitly:
 
-The installer preserves other preferences, validates the proposed configuration with Ghostty, and saves `config.before-things-TIMESTAMP` alongside an existing configuration before changing it. Existing direct color overrides take precedence over theme colors.
+```sh
+python3 install.py --config /absolute/path/config.ghostty
+```
 
-Press **Cmd+Shift+comma** in Ghostty on macOS to reload. The installed Ghostty 1.3.1 reports `super+shift+,=reload_config`. Installation does not restart Ghostty or close sessions. The running terminal's reload could not be automated because this environment does not permit computer control of Ghostty.
+The standard theme directory is `$XDG_CONFIG_HOME/ghostty/themes`, or `~/.config/ghostty/themes` when XDG_CONFIG_HOME is unset. If it is not writable on macOS, the script falls back to `~/Library/Application Support/com.mitchellh.ghostty/themes` and selects the themes by absolute path. This handles a root-owned standard theme folder without changing its permissions. Themes in the fallback directory will work but will not appear in `ghostty +list-themes`.
 
-For a fixed appearance, replace the `theme` setting with the absolute installed path to `Things Light` or `Things Dark`. The paired form used by the installer is:
+For that fallback or another custom theme directory, use absolute paths in the configuration:
 
 ```ini
 theme = light:/absolute/path/Things Light,dark:/absolute/path/Things Dark
 ```
+
+To select a fixed appearance, use `theme = Things Light` or `theme = Things Dark`, or the corresponding absolute path. Explicit color settings override theme colors. Included configuration files can also override your selection; the installer leaves those files intact. Installation does not restart Ghostty or close sessions, so reload after running it.
 
 ## Colors and limits
 
@@ -38,10 +66,18 @@ The terminal keeps its font and layout preferences. Ghostty cannot reproduce Obs
 
 ## Validate and undo
 
+Run the installer regression checks with:
+
+```sh
+python3 -m unittest discover -s tests -v
+```
+
+Validate your active Ghostty configuration with:
+
 ```sh
 /Applications/Ghostty.app/Contents/MacOS/ghostty +validate-config
 ```
 
 To undo installation, copy the saved `config.before-things-TIMESTAMP` over the adjacent `config` file, then reload Ghostty. Remove the two installed theme files if no configuration refers to them. Choose your exact backup from the installer output.
 
-The theme files and system-switching configuration passed native Ghostty 1.3.1 validation. [Ghostty's official theme reference](https://ghostty.org/docs/config/reference#theme) documents absolute paths, paired appearances and override precedence. The SVG is a palette illustration, not an application screenshot.
+The theme files and system-switching configuration passed native Ghostty 1.3.1 validation. The installer checks cover configuration load order, modern and legacy filenames, settings preservation, backups, and repeat installation. [Ghostty's official theme reference](https://ghostty.org/docs/config/reference#theme) documents absolute paths, paired appearances and override precedence. The SVG is a palette illustration, not an application screenshot.
