@@ -1,0 +1,25 @@
+# Things for Ghostty, adapted from Obsidian Things 2.2.4.
+# Source https://github.com/colineckert/obsidian-things
+background = #1c2127
+foreground = #dadada
+cursor-color = #79a9ec
+cursor-text = #1c2127
+selection-background = #283c58
+selection-foreground = #dadada
+split-divider-color = #35393e
+palette = 0=#282c34
+palette = 1=#e06c75
+palette = 2=#98c379
+palette = 3=#e5c07b
+palette = 4=#61afef
+palette = 5=#c678dd
+palette = 6=#56b6c2
+palette = 7=#abb2bf
+palette = 8=#5c6370
+palette = 9=#fb464c
+palette = 10=#44cf6e
+palette = 11=#e0de71
+palette = 12=#79a9ec
+palette = 13=#a882ff
+palette = 14=#53dfdd
+palette = 15=#dadada
