@@ -64,6 +64,18 @@ ANSI colors 1 through 6 use Things' Atom syntax red, green, orange/yellow, blue,
 
 The terminal keeps its font and layout preferences. Ghostty cannot reproduce Obsidian's note typography, sidebar cards or CSS spacing through a color theme. Programs that emit their own truecolor values can override the ANSI palette. Ghostty documents a macOS tab titlebar style issue during light/dark switches; no sessions are restarted to work around it.
 
+## Agent CLI colors
+
+Agent CLIs can select their own colors independently of the terminal theme. If Antigravity CLI `agy` displays pale text on a white Things Light background, open `/config`, choose Color Scheme, and select `terminal`. This lets agy use the Things ANSI palette in both appearances.
+
+For future sessions, set only this value in `~/.gemini/antigravity-cli/settings.json`, keeping your other preferences:
+
+```json
+"colorScheme": "terminal"
+```
+
+Changing the file applies to new sessions. Use `/config` in a running session to apply the scheme immediately. Previously rendered scrollback can retain its old colors. See [Antigravity CLI display settings](https://antigravity.google/docs/settings?tab=cli#display-and-rendering).
+
 ## Validate and undo
 
 Run the installer regression checks with:
